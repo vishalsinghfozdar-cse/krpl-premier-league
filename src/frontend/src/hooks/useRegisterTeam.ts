@@ -1,34 +1,23 @@
+import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { RegistrationRecord, TeamRegistration } from "../types";
-
-const STORAGE_KEY = "krpl_registrations";
-
-function getStoredRegistrations(): RegistrationRecord[] {
-  try {
-    const data = localStorage.getItem(STORAGE_KEY);
-    return data ? (JSON.parse(data) as RegistrationRecord[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveRegistrations(records: RegistrationRecord[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-}
+import { createActor } from "../backend";
+import type { TeamRegistration } from "../types";
 
 export function useRegisterTeam() {
+  const { actor } = useActor(createActor);
   const queryClient = useQueryClient();
 
-  return useMutation<RegistrationRecord, Error, TeamRegistration>({
+  return useMutation<boolean, Error, TeamRegistration>({
     mutationFn: async (data: TeamRegistration) => {
-      const existing = getStoredRegistrations();
-      const newRecord: RegistrationRecord = {
-        ...data,
-        id: `team_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
-        registeredAt: new Date().toISOString(),
-      };
-      saveRegistrations([...existing, newRecord]);
-      return newRecord;
+      if (!actor)
+        throw new Error("बैकएंड से कनेक्शन नहीं हो पाया। कृपया पुनः प्रयास करें।");
+      return actor.registerTeam(
+        data.teamName,
+        data.captainName,
+        data.villageName,
+        data.phone,
+        data.playerCount,
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["registrations"] });

@@ -1,22 +1,18 @@
+import { useActor } from "@caffeineai/core-infrastructure";
 import { useQuery } from "@tanstack/react-query";
-import type { RegistrationRecord } from "../types";
+import { type Registration, createActor } from "../backend";
 
-const STORAGE_KEY = "krpl_registrations";
-
-function getStoredRegistrations(): RegistrationRecord[] {
-  try {
-    const data = localStorage.getItem(STORAGE_KEY);
-    return data ? (JSON.parse(data) as RegistrationRecord[]) : [];
-  } catch {
-    return [];
-  }
-}
+export type { Registration };
 
 export function useRegistrations() {
-  return useQuery<RegistrationRecord[]>({
+  const { actor, isFetching } = useActor(createActor);
+
+  return useQuery<Registration[]>({
     queryKey: ["registrations"],
     queryFn: async () => {
-      return getStoredRegistrations();
+      if (!actor) return [];
+      return actor.getRegistrations();
     },
+    enabled: !!actor && !isFetching,
   });
 }

@@ -15,17 +15,19 @@ const TABLE_HEADERS = [
   { key: "time", label: "रजिस्ट्रेशन समय" },
 ];
 
-function formatDateHindi(iso: string): string {
+function formatTimestamp(ts: bigint): string {
   try {
+    // Backend stores timestamp in nanoseconds (Int from Motoko)
+    const ms = Number(ts) / 1_000_000;
     return new Intl.DateTimeFormat("hi-IN", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-    }).format(new Date(iso));
+    }).format(new Date(ms));
   } catch {
-    return iso;
+    return String(ts);
   }
 }
 
@@ -153,7 +155,7 @@ export default function Admin() {
               }}
               data-ocid="admin.error_state"
             >
-              <p className="text-xl font-bold text-destructive-foreground">
+              <p className="text-xl font-bold" style={{ color: "#ff8888" }}>
                 डेटा लोड करने में समस्या हुई।
               </p>
               <p className="text-sm mt-1 text-muted-foreground">
@@ -214,7 +216,7 @@ export default function Admin() {
                 <tbody>
                   {registrations.map((reg, idx) => (
                     <tr
-                      key={reg.id}
+                      key={String(reg.id)}
                       className="transition-smooth hover:bg-white/5"
                       style={{
                         borderBottom: "1px solid rgba(255,255,255,0.06)",
@@ -260,7 +262,7 @@ export default function Admin() {
                         </Badge>
                       </td>
                       <td className="px-4 py-3 text-muted-foreground text-xs whitespace-nowrap">
-                        {formatDateHindi(reg.registeredAt)}
+                        {formatTimestamp(reg.timestamp)}
                       </td>
                     </tr>
                   ))}

@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useEffect, useId, useRef, useState } from "react";
 import { useRegisterTeam } from "../hooks/useRegisterTeam";
 import type { TeamRegistration } from "../types";
@@ -63,7 +64,7 @@ interface ModalProps {
 
 function RegistrationModal({ onClose, onSuccess }: ModalProps) {
   const [form, setForm] = useState<TeamRegistration>(EMPTY_FORM);
-  const { mutate: registerTeam, isPending } = useRegisterTeam();
+  const { mutate: registerTeam, isPending, isError, error } = useRegisterTeam();
   const overlayRef = useRef<HTMLDivElement>(null);
 
   const teamId = useId();
@@ -84,8 +85,8 @@ function RegistrationModal({ onClose, onSuccess }: ModalProps) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     registerTeam(form, {
-      onSuccess: (record) => {
-        const name = record.teamName;
+      onSuccess: () => {
+        const name = form.teamName;
         setForm(EMPTY_FORM);
         onClose();
         onSuccess(name);
@@ -148,6 +149,21 @@ function RegistrationModal({ onClose, onSuccess }: ModalProps) {
         >
           टीम रजिस्ट्रेशन फॉर्म
         </h2>
+
+        {/* Error state */}
+        {isError && (
+          <div
+            data-ocid="home.register.error_state"
+            className="rounded-lg px-4 py-3 mb-4 text-sm font-medium"
+            style={{
+              background: "rgba(255,50,50,0.15)",
+              border: "1px solid rgba(255,80,80,0.4)",
+              color: "#ff8888",
+            }}
+          >
+            ⚠️ {error?.message ?? "रजिस्ट्रेशन में समस्या आई। कृपया पुनः प्रयास करें।"}
+          </div>
+        )}
 
         <form
           data-ocid="home.register.form"
@@ -542,11 +558,29 @@ export default function Home() {
           </div>
         </div>
 
-        {/* ── Footer ── */}
-        <footer
-          className="mt-10"
-          style={{ color: "#888", fontSize: "0.85rem" }}
+        {/* ── Admin Link ── */}
+        <div
+          className="mt-8 pt-6 flex justify-center"
+          style={{ borderTop: "1px solid rgba(253,187,45,0.3)" }}
         >
+          <Link
+            to="/admin"
+            data-ocid="home.admin.link"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-smooth hover:scale-105 hover:brightness-110"
+            style={{
+              background: "rgba(253,187,45,0.12)",
+              border: "1.5px solid rgba(253,187,45,0.7)",
+              color: "var(--gold)",
+            }}
+          >
+            <span>📋</span>
+            <span>एडमिन पैनल — रजिस्ट्रेशन लिस्ट देखें</span>
+            <span>→</span>
+          </Link>
+        </div>
+
+        {/* ── Footer ── */}
+        <footer className="mt-8" style={{ color: "#888", fontSize: "0.85rem" }}>
           <p>विनीत: समस्त ग्रामवासी, रेला खेड़ली, कठूमर (अलवर) राज.</p>
           <p className="mt-2">
             © {new Date().getFullYear()}. Built with love using{" "}
