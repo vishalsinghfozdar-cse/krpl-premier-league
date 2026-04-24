@@ -1,0 +1,22 @@
+{
+  "overview": "KRPL Premier League 2026 — a cricket tournament registration website for the night cricket competition in Kherli, Kathumar (Alwar). Features prize details, countdown timer, tournament rules in Hindi, and team registration with backend storage and a public admin view.",
+  "features": [
+    "Dark blue/purple gradient design with gold accents and animations",
+    "Live countdown timer to tournament date (April 28, 2026)",
+    "Prize cards showing ₹51,000 and ₹21,000 awards",
+    "Team registration form with backend persistence",
+    "Public admin page to view all registered teams",
+    "Fully responsive mobile-friendly design",
+    "All content in Hindi"
+  ],
+  "category": "sports",
+  "tags": [
+    "cricket",
+    "tournament",
+    "registration",
+    "hindi",
+    "sports",
+    "india"
+  ],
+  "last_updated": "2026-04-24T13:04:04.146Z"
+}

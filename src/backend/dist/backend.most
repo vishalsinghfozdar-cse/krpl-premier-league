@@ -1,0 +1,23 @@
+// Version: 1.0.0
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Registration__282286680 =
+  {
+    captainName : Text;
+    id : Nat;
+    phone : Text;
+    playerCount : Text;
+    teamName : Text;
+    timestamp : Int;
+    villageName : Text
+  };
+actor {
+  stable nextId : {var value : Nat};
+  stable var nextIdValue : Nat;
+  stable registrations :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Registration__282286680]];
+      var elementIndex : Nat__490723111
+    }
+};

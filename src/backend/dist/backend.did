@@ -1,0 +1,15 @@
+type Registration = 
+ record {
+   captainName: text;
+   id: nat;
+   phone: text;
+   playerCount: text;
+   teamName: text;
+   timestamp: int;
+   villageName: text;
+ };
+service : {
+  getRegistrations: () -> (vec Registration) query;
+  registerTeam: (teamName: text, captainName: text, villageName: text, phone:
+   text, playerCount: text) -> (bool);
+}
